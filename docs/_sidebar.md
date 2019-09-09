@@ -1,4 +1,4 @@
-## 目录
+目录
  - [P1 K-近邻算法](chapter1/chapter1.md)
  - [P2 决策树](chapter2/chapter2.md)
  - [P3 基于概率论的分类方法：朴素贝叶斯](chapter3/chapter3.md)
