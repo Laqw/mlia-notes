@@ -1,2 +1,16 @@
-- 目录
- - [P1 ](chapter1/chapter1.md)
+## 目录
+ - [P1 K-近邻算法](chapter1/chapter1.md)
+ - [P2 决策树](chapter2/chapter2.md)
+ - [P3 基于概率论的分类方法：朴素贝叶斯](chapter3/chapter3.md)
+ - [P4 Logistic回归](chapter4/chapter4.md)
+ - [P5 支持向量机](chapter5/chapter5.md)
+ - [P6 利用AdaBoost元算法提高分类](chapter6/chapter6.md)
+ - [P7 预测数值型数据：回归](chapter7/chapter7.md)
+ - [P8 树回归](chapter8/chapter8.md)
+ - [P9 利用K均值聚类算法对未标数据分组](chapter9/chapter9.md)
+ - [P10 使用Apriori算法进行关联](chapter10/chapter10.md)
+ - [P11 使用FP-growth算法高效发现频繁项集](chapter11/chapter11.md)
+ - [P12 利用PCA来简化数据](chapter12/chapter12.md)
+ - [P13 利用SVD简化数据](chapter13/chapter13.md)
+ - [P14 大数据与MapReduce](chapter14/chapter14.md)
+ 
