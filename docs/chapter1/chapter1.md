@@ -184,21 +184,213 @@ classify0([18, 90], data, 4)
 
 
 
+## 示例：使用K-近邻算法改进约会网站的配对效果
+
+
+我的朋友海伦一直使用在线约会网站寻找合适自己的约会对象。尽管约会网站会推荐不同的人选，但她并不喜欢每一个人。经过一番总结，它发现曾交往过三种类型的人
+- 不喜欢的人
+- 魅力一般的人
+- 机具魅力的人
+
+
+尽管发现了上述规律，但海伦依然无法将约会网站推荐的匹配对象归入恰当的类别。她觉得可以在周一到周五约会那些魅力一般的人，而周末则更喜欢与哪些机具魅力的人为伴。海伦希望我们的分类软件可以更好地帮助她将匹配对象划分到确切的分类中。此海伦还收集了一些约会网站未曾记录的数据信息，她认为这些数据更有助于匹配对象的归类
+
+
+海伦收集约会数据已经有了一段时间，她把这些数据存入文本文件datingTestSet2.txt中，每个样本数据占据一行，总共有1000行。海伦的样本主要包含以下3种特征：
+- 每年获得的飞行常客里乘数
+- 玩视频游戏所耗时间百分比
+- 每周消费的冰淇淋公升数
+
+
+### 准备数据：从文本文件中解析数据
 
 
 
 
+```
+import numpy as np
+def file2matrix(filename):
+    '''
+    函数功能：
+        读取文件
+    参数：
+        filename__文件名
+    返回值：
+        返回特征矩阵，标签列表
+    '''
+    # open() 函数用于打开一个文件，文件名为：filename
+    fr = open(filename)
+    # readlines() 方法用于读取所有行并返回列表
+    arrayOLines = fr.readlines()
+    # len()方法返回列表元素个数
+    numberOfLines = len(arrayOLines)
+    # 创建返回的Numpy矩阵
+    returnMat = np.zeros((numberOfLines, 3))
+    # 创建标签列表
+    classLabelVector = []
+    # 初始化index值
+    index = 0
+    # 遍历每一行数据
+    for line in arrayOLines:
+        # strip() 方法用于移除字符串头尾指定的字符
+        line = line.strip()
+        # split() 通过指定分隔符对字符串进行切片(空格)
+        listFormLine = line.split('\t')
+        # 分割特征矩阵
+        returnMat[index, :] = listFormLine[0: 3]
+        # 分割标签列表
+        classLabelVector.append((listFormLine[-1]))
+        index += 1
+    # 返回特征矩阵，标签列表
+    return returnMat, classLabelVector
+
+# 测试函数     
+file2matrix('datingTestSet.txt')
+```
+
+![](res/chapter1-10.png)
+
+
+
+```
+# 导入数据
+datingTest = pd.read_table('datingTestSet.txt', header = None)
+datingTest.head()
+```
+
+![](res/chapter1-11.png)
+
+
+```
+# 查看数据信息
+datingTest.info()
+```
+
+![](res/chapter1-12.png)
+
+
+
+```
+# 更正列名
+datingTest.columns = ['每年飞行常客里程', '玩游戏视频所占时间比', '每周消费冰淇淋公升数', '类别']
+datingTest.head()
+```
+
+![](res/chapter1-13.png)
+
+
+```
+ # 将不同的标签用不同颜色区分(三类)
+colors = []
+for i in range(datingTest.shape[0]):
+    # 位置索引
+    m = datingTest.iloc[i, -1]
+    if m == 'didntLike':
+        colors.append('black')
+    if m == 'smallDoses':
+        colors.append('orange')
+    if m == 'largeDoses':
+        colors.append('green')
+len(colors)     
+```
+
+![](res/chapter1-14.png)
+
+此散点图使用datingTest数据集中的第一列好第二列数据，分别表示特征值的“玩视频游戏所耗时间百分比”和“每周所消费的冰淇淋的公升数”
 
 
 
 
+```
+# 设置中文
+plt.rcParams['font.sans-serif']=["Simhei"] 
+# 创建画布
+plt.figure(figsize=(10, 6))
+
+            # 每年飞行常客里程
+plt.scatter(datingTest.iloc[:, 0],
+            # 玩游戏视频所占时间比
+            datingTest.iloc[:, 1], 
+            s = 10,
+            c = colors)
+plt.xlabel('每年飞行常客里程')
+plt.ylabel('玩游戏视频所占时间比')
+```
+
+![](res/chapter1-15.png)
+
+此散点图使用datingTest数据集中的第零列好第一列数据，分别表示特征值的“玩视频游戏所耗时间百分比”和“每年飞行常客里程”
 
 
 
+```
+# 设置中文
+plt.rcParams['font.sans-serif']=["Simhei"] 
+# 创建画布
+plt.figure(figsize=(10, 6))
+            # 每年飞行常客里程
+plt.scatter(datingTest.iloc[:, 0],
+            # 每周消费冰淇淋公升数
+            datingTest.iloc[:, 2], 
+            s = 10,
+            c = colors)
+plt.xlabel('每年飞行常客里程')
+plt.ylabel('每周消费冰淇淋公升数')
+plt.show()
+```
+
+![](res/chapter1-16.png)
+
+此散点图使用datingTest数据集中的第零列好第二列数据，分别表示特征值的“每周所消费的冰淇淋的公升数”和“每年飞行常客里程
+
+### 准备数据：归一化数值
+
+
+表2-3给出了提取的四组数据，如果想要计算样本3和样本四之间的距离，可以使用下面的方法
+
+
+$$\sqrt{(0-67)^2+(20000-32000)^2+(1.1-0.1)^2}$$
+
+
+我们很容易发现，上面方程中数字差值最大的属性对计算结果的影响最大，也就是说，每年获取的飞行常客里程数对于计算结果的影响将远远大于表2-3中其他两个特征————玩视频游戏所耗时间百分比和每周消费冰淇淋公升数————的影响。而产生这种现象的唯一原因，仅仅是因为飞行常客里程数远大于其他特征值。但海伦认为这三种特征是同等重要的，因此作为三个等权重的特征之一，飞行常客里程数并不应该如此严重地影响到计算结果
+
+
+![](res/chapter1-17.png)
+
+处理这种不同取值范围的特征值时，我们通常采用的方法是将数值归一化，如将取值范围处理为0到1或者-1到1之间。下面的公式可以将任意取值范围的特征值转换为0到1区间内的值
 
 
 
+$$normlization = \frac{x-Min}{Max - Min}$$
 
+
+
+```
+def autoNorm(dataSet):
+    '''
+    函数功能：
+        归一化
+    参数：
+        dataSet__原始数据集
+    返回值：
+        取值范围为0-1的数据集
+    '''
+    # 获取特征数组
+    data = dataSet.iloc[:, :3]
+    # min() 方法可返回指定的数字中带有最小值的数字。
+    minVals = data.min()
+    # max() 方法可返回指定的数字中带有最大值的数字。
+    maxVals = data.max()
+    # 归一化公式
+    norm = (data - minVals) / (maxVals - minVals)
+    return norm
+
+# 测试函数
+autoNorm(datingTest)
+```
+显示部分数据信息
+
+![](res/chapter1-18.png)
 
 
 
