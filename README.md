@@ -1,3 +1,10 @@
+## 主要贡献者
+###  负责人
+- 王佳旭 ([@DatawhaleXiuyuan](https://github.com/DatawhaleXiuyuan))
+## 参与成员（按首字母排名）
+- 王佳旭 ([@DatawhaleXiuyuan](https://github.com/DatawhaleXiuyuan))
+- 排骨   ([@spareribs](https://github.com/spareribs))
+
 ## 机器学习实战笔记解读(mlia-notes)+sklearn翻译
 本项目主要是对书籍《机器学习实战》以及sklearn官网的内容进行翻译解读
 
@@ -20,12 +27,6 @@
 
 ## 京东《机器学习实战》纸质版购买网址：
 [机器学习实战](https://item.jd.com/11242112.html)
-
-
-## 主要贡献者（按首字母排名）
-
-- [@DatawhaleXiuyuan](https://github.com/DatawhaleXiuyuan)
-- [@spareribs](https://github.com/spareribs)
 
 
 ## 关注我们
