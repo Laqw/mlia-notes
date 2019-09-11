@@ -33,10 +33,12 @@ import pandas as pd
 
 
 ```
+# 创建字典数据temp_data
 temp_data= {'电影名称':['California Man', 'He is Not Really into Dudes', 'Beautiful Woman', 'Kevin Longblade', 'Robo Slayer 3000', 'Amped II'],
       '打斗镜头':[3, 2, 1, 101, 99, 98],
       '接吻镜头':[104, 100, 81, 10, 5, 2],
       '电影类型':['爱情片', '爱情片', '爱情片', '动作片', '动作片', '动作片']}
+# 字典数据创建Dataframe
 data = pd.DataFrame(temp_data)
 data
 ```
@@ -49,10 +51,15 @@ data
 ```
 # 假设未知电影的“打斗镜头，接吻镜头”分别为：18, 90
 new_data = [18, 90]
+# 每一个电影的“打斗镜头，接吻镜头”与新数据的“打斗镜头，接吻镜头”进行相减
 diff  = data.iloc[:, 1:3] - new_data
+# 相减之后的结果进行平方
 sqDiff = diff**2
+# 平方之后进行求和(axis=1)
 sqDistances = sqDiff.sum(1)
+# 求和之后进行开方
 temp_distances = sqDistances**0.5
+# 将结果转换为list
 distances = list(temp_distances)
 distances
 ```
@@ -63,8 +70,11 @@ distances
 
 
 ```
+# 将dist和labels生成Dataframe
 distances_1 = pd.DataFrame({'dist':distances, 'labels':(data.iloc[:6, 3])})
+# 通过'dist'这一列进行排序
 sort_distances = distances_1.sort_values(by = 'dist')
+sort_distances
 ```
 
 ![](res/chapter1-5.png)
@@ -74,8 +84,9 @@ sort_distances = distances_1.sort_values(by = 'dist')
 
 
 ```
-k = 4 
-sort_distances = distances_1.sort_values(by = 'dist')[:4]
+k = 4
+# 选取k=4
+sort_distances = distances_1.sort_values(by = 'dist')[:k]
 sort_distances
 ```
 
@@ -87,13 +98,16 @@ sort_distances
 
 
 ```
+# 计算每个不同值有在该列中有多少重复值。
 fre_sort_distances = sort_distances.loc[:, 'labels'].value_counts()
 fre_sort_distances
 ```
 ![](res/chapter1-7.png)
 
 ```
+# 创建空list，用于保存
 result = []
+# 将频率最高的labels添加至result
 result.append(fre_sort_distances.index[0])
 result
 ```
@@ -133,23 +147,40 @@ def classify0(inx, dataSet, k):
         inx__用于分类的输入向量
         dataSet__输入训练样本集
         K__最近邻居的数目
+    返回值：
+        分类结果
     '''
+    # 创建空list，用于保存
     result = []
-    diff  = data.iloc[:, 1:3] - new_data
+    # 每一个电影的“打斗镜头，接吻镜头”与新数据的“打斗镜头，接吻镜头”进行相减
+    diff  = data.iloc[:, 1:3] - inx
+    # 相减之后的结果进行平方
     sqDiff = diff**2
+    # 平方之后进行求和(axis=1)
     sqDistances = sqDiff.sum(1)
+    # 求和之后进行开方
     temp_distances = sqDistances**0.5
+    # 将结果转换为list
     distances = list(temp_distances)
+    # 将dist和labels生成Dataframe
     distances_1 = pd.DataFrame({'dist':distances, 'labels':(data.iloc[:6, 3])})
+    # 通过'dist'这一列进行排序
     sort_distances = distances_1.sort_values(by = 'dist')
+    # 选取k
     sort_distances = distances_1.sort_values(by = 'dist')[:k]
+    # 计算每个不同值有在该列中有多少重复值。
     fre_sort_distances = sort_distances.loc[:, 'labels'].value_counts()
+    # 将频率最高的labels添加至result
     result.append(fre_sort_distances.index[0])
     
+    # 返回result
     return result
+
+# 测试函数
+classify0([18, 90], data, 4)
 ```
 
-
+![](res/chapter1-9.png)
 
 
 
