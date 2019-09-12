@@ -2,8 +2,8 @@
 ###  负责人
 - 王佳旭 ([@DatawhaleXiuyuan](https://github.com/DatawhaleXiuyuan))
 ## 参与成员（按首字母排名）
-- 王佳旭 ([@DatawhaleXiuyuan](https://github.com/DatawhaleXiuyuan))
-- 排骨   ([@spareribs](https://github.com/spareribs))
+- [@DatawhaleXiuyuan](https://github.com/DatawhaleXiuyuan) (王佳旭)
+- [@spareribs](https://github.com/spareribs) (排骨)
 
 ## 机器学习实战笔记解读(mlia-notes)+sklearn翻译
 本项目主要是对书籍《机器学习实战》以及sklearn官网的内容进行翻译解读
